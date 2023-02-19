@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val repository: SlangWordRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _slangWords: MutableStateFlow<List<SlangWord>> = MutableStateFlow(emptyList())
     val slangWords = _slangWords.asStateFlow()
@@ -23,6 +23,17 @@ class ListViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getAllSlangWords().collect {
                 _slangWords.value = it
+            }
+        }
+    }
+
+    fun getFilteredWords(filter: String) {
+        viewModelScope.launch {
+            repository.getAllSlangWords().collect {
+                _slangWords.value = it.filter { word ->
+                    word.word.lowercase().contains(filter.lowercase())
+                            || word.translates.lowercase().contains(filter.lowercase())
+                }
             }
         }
     }

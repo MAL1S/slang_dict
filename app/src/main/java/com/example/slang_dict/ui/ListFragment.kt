@@ -1,8 +1,12 @@
 package com.example.slang_dict.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
 import android.widget.ListView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +18,11 @@ import com.example.slang_dict.R
 import com.example.slang_dict.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +46,9 @@ class ListFragment: Fragment(R.layout.fragment_list) {
 
     private fun init() {
         binding.rcvWords.adapter = adapter
+        binding.etSearch.addTextChangedListener {
+            viewModel.getFilteredWords(it.toString())
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.slangWords.collect {
