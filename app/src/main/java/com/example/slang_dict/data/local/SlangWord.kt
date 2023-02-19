@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class SlangWord(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val word: String,
-    val translates: List<String>
+    val translates: String
 )
