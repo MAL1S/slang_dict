@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.room.Insert
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.slang_dict.R
@@ -24,7 +25,10 @@ class ListFragment: Fragment(R.layout.fragment_list) {
 
     private val viewModel: ListViewModel by viewModels()
 
-    private val adapter = SlangWordAdapter()
+    private val adapter = SlangWordAdapter {
+        val action = ListFragmentDirections.actionListFragmentToDetailsFragment(it)
+        findNavController().navigate(action)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

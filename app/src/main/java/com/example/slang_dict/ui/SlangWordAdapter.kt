@@ -8,16 +8,23 @@ import com.example.slang_dict.R
 import com.example.slang_dict.data.local.SlangWord
 import com.example.slang_dict.databinding.ItemSlangWordBinding
 
-class SlangWordAdapter: RecyclerView.Adapter<SlangWordAdapter.ViewHolder>() {
+class SlangWordAdapter(
+    private val onWordDetailsClickedListener: OnWordDetailsClickedListener
+): RecyclerView.Adapter<SlangWordAdapter.ViewHolder>() {
     inner class ViewHolder(
         inflater: LayoutInflater,
         parent: ViewGroup,
+        private val onWordDetailsClickedListener: OnWordDetailsClickedListener
     ): RecyclerView.ViewHolder(inflater.inflate(R.layout.item_slang_word, parent, false)) {
 
         private val binding by viewBinding(ItemSlangWordBinding::bind)
 
         fun bind(slangWord: SlangWord) {
             binding.cardTv.text = slangWord.word
+
+            itemView.setOnClickListener {
+                onWordDetailsClickedListener.onClicked(slangWord)
+            }
         }
     }
 
@@ -25,7 +32,7 @@ class SlangWordAdapter: RecyclerView.Adapter<SlangWordAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(inflater, parent)
+        return ViewHolder(inflater, parent, onWordDetailsClickedListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,4 +41,8 @@ class SlangWordAdapter: RecyclerView.Adapter<SlangWordAdapter.ViewHolder>() {
     }
 
     override fun getItemCount() = words.size
+}
+
+fun interface OnWordDetailsClickedListener {
+    fun onClicked(word: SlangWord)
 }

@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 csvReader().open(inputStream) {
                     readAllWithHeaderAsSequence().forEach {
                         val word = SlangWord(
-                            word = it["word"]!!,
+                            word = it["word"]!!.replaceFirstChar { char -> char.uppercase() },
                             translates = it["translates"]!!
                         )
 
